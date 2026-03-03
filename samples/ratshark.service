@@ -1,0 +1,16 @@
+[Unit]
+Description=rarelay service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStartPre=/bin/bash -c "ls -tp /path/to/ra_*.pcapng | grep -v '/$' | tail -n +5 | xargs -I {} rm -- {}"
+ExecStart=tshark -i eth1 -f "icmp6 and ip6[40] = 134" -b filesize:1000 -b files:5 -q -w /path/to/ra.pcapng
+Restart=on-failure
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
+
