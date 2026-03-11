@@ -77,6 +77,12 @@ add comment="ether1-4 dhcpv6(port546)" switch=switch1 ports=ether1,ether2,ether3
 add comment="ether1-4 dhcpv6(port547)" switch=switch1 ports=ether1,ether2,ether3,ether4 mac-protocol=ipv6 protocol=udp src-port=546 dst-port=547 copy-to-cpu=no redirect-to-cpu=no mirror=no new-dst-ports=""
 ```
 
+## RA Guard
+
+RouterOSのの7.22(stable)でRA Guardが入ったのでこれを使うともっとシンプルな設定になりそう。しかし、HGW側へのRSが止めれないだろうからCRS304-4XGのようにポート数が少ない場合は前述のようなルールの方が良さそう。
+
+https://help.mikrotik.com/docs/spaces/ROS/pages/328068/Bridging+and+Switching#BridgingandSwitching-RAGuard
+
 ## Proxmox VE での設定例
 
 ### LXC コンテナ (CT)
