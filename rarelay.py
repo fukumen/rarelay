@@ -49,13 +49,16 @@ def send_ra(pktcap):
         prefix.prefix = pktcap[ICMPv6NDOptPrefixInfo].prefix
         prefix.validlifetime = pktcap[ICMPv6NDOptPrefixInfo].validlifetime
         prefix.preferredlifetime = pktcap[ICMPv6NDOptPrefixInfo].preferredlifetime
+        lifetime = 3600
+        if pktcap.haslayer(ICMPv6NDOptRDNSS):
+            lifetime = pktcap[ICMPv6NDOptRDNSS].lifetime
         rdnss = ICMPv6NDOptRDNSS()
-        rdnss.lifetime = pktcap[ICMPv6NDOptRDNSS].lifetime
+        rdnss.lifetime = lifetime
         rdnss.dns = []
         for d in dns:
             rdnss.dns.append(pktcap[ICMPv6NDOptPrefixInfo].prefix[:-1] + d)
         dnssl = ICMPv6NDOptDNSSL()
-        dnssl.lifetime = pktcap[ICMPv6NDOptRDNSS].lifetime
+        dnssl.lifetime = lifetime
         dnssl.searchlist = searchlist
         pktsnd=(ether/ip/ra/prefix/rdnss/dnssl/lladdr)
         with resource_lock:
@@ -95,13 +98,16 @@ def send_rs(pktcap, pktra):
         prefix.prefix = pktra[ICMPv6NDOptPrefixInfo].prefix
         prefix.validlifetime = pktra[ICMPv6NDOptPrefixInfo].validlifetime
         prefix.preferredlifetime = pktra[ICMPv6NDOptPrefixInfo].preferredlifetime
+        lifetime = 3600
+        if pktra.haslayer(ICMPv6NDOptRDNSS):
+            lifetime = pktra[ICMPv6NDOptRDNSS].lifetime
         rdnss = ICMPv6NDOptRDNSS()
-        rdnss.lifetime = pktra[ICMPv6NDOptRDNSS].lifetime
+        rdnss.lifetime = lifetime
         rdnss.dns = []
         for d in dns:
             rdnss.dns.append(pktra[ICMPv6NDOptPrefixInfo].prefix[:-1] + d)
         dnssl = ICMPv6NDOptDNSSL()
-        dnssl.lifetime = pktra[ICMPv6NDOptRDNSS].lifetime
+        dnssl.lifetime = lifetime
         dnssl.searchlist = searchlist
         pktsnd=(ether/ip/ra/prefix/rdnss/dnssl/lladdr)
     else:
